@@ -3,6 +3,11 @@
 > 原始文档：<https://www.yuque.com/lart/ugkv9f/ugysgn>
 >
 > 声明：大部分内容来自知乎和其他博客的分享，这里只作为一个收集罗列。欢迎给出更多建议。
+> 知乎回答（欢迎点赞哦）：
+> * pytorch dataloader数据加载占用了大部分时间，各位大佬都是怎么解决的？ - 人民艺术家的回答 - 知乎
+https://www.zhihu.com/question/307282137/answer/907835663
+> * 使用pytorch时，训练集数据太多达到上千万张，Dataloader加载很慢怎么办? - 人民艺术家的回答 - 知乎
+https://www.zhihu.com/question/356829360/answer/907832358
 
 ## changelog
 
