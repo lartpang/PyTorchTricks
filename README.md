@@ -51,6 +51,7 @@ https://www.zhihu.com/question/356829360/answer/907832358
 * Free up memory using `del`
 * Avoid unnecessary transfer of data from the GPU
 * Use pinned memory, and use `non_blocking=False` to parallelize data transfer and GPU number crunching
+* 网络设计很重要，外加不要初始化任何用不到的变量，因为pyroch的初始化和forward是分开的，他不会因为你不去使用，而不去初始化(摘自:pytorch常见的坑汇总 @郁振波)
 
 ### 模型设计
 
@@ -99,3 +100,4 @@ https://www.zhihu.com/question/356829360/answer/907832358
 * 今天，你的模型加速了吗？这里有5个方法供你参考（附代码解析）<https://mp.weixin.qq.com/s?__biz=MzI0ODcxODk5OA==&mid=2247511633&idx=2&sn=a5ab187c03dfeab4e64c85fc562d7c0d&chksm=e99e9da8dee914be3d713c41d5dedb7fcdc9982c8b027b5e9b84e31789913c5b2dd880210ead&mpshare=1&scene=1&srcid=&sharer_sharetime=1576934236399&sharer_shareid=1d0dbdb37c6b95413d1d4fe7d61ed8f1&exportkey=A%2B3SqYGse83qyFva%2BYSy3Ng%3D&pass_ticket=winxjBrzw0kHErbSri5yXS88yBx1a%2BAL9KKTG6Zt1MMS%2FeI2hpx%2BmeaLsrahnlOS#rd>
 * GitHub代码库：深度学习模型压缩与加速 <https://mp.weixin.qq.com/s?__biz=MzIxOTczOTM4NA==&mid=2247489584&idx=1&sn=2650c5bd2c06c5bdb8b963a2aaca89e1&chksm=97d7fda7a0a074b1e92e1d083e07b828db49e56f63eab076db9a4f42e0b3ca7fa24640d8113c&mpshare=1&scene=1&srcid=1222MZ2EuOrqMUgb4R7SWOs2&sharer_sharetime=1576977346263&sharer_shareid=1d0dbdb37c6b95413d1d4fe7d61ed8f1&exportkey=AyKSYEns4PLDkqpCH4%2B4VT0%3D&pass_ticket=winxjBrzw0kHErbSri5yXS88yBx1a%2BAL9KKTG6Zt1MMS%2FeI2hpx%2BmeaLsrahnlOS#rd>
 * 网络inference阶段conv层和BN层的融合 - autocyz的文章 - 知乎 https://zhuanlan.zhihu.com/p/48005099
+* pytorch常见的坑汇总 - 郁振波的文章 - 知乎 https://zhuanlan.zhihu.com/p/77952356
