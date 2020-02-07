@@ -52,7 +52,7 @@ https://www.zhihu.com/question/356829360/answer/907832358
 * Free up memory using `del`
 * Avoid unnecessary transfer of data from the GPU
 * Use pinned memory, and use `non_blocking=False` to parallelize data transfer and GPU number crunching
-* 网络设计很重要，外加不要初始化任何用不到的变量，因为pyroch的初始化和forward是分开的，他不会因为你不去使用，而不去初始化(摘自:pytorch常见的坑汇总 @郁振波)
+* 网络设计很重要，外加不要初始化任何用不到的变量，因为 PyTorch 的初始化和 `forward` 是分开的，他不会因为你不去使用，而不去初始化
 
 ### 模型设计
 
