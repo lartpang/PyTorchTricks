@@ -48,7 +48,7 @@ https://www.zhihu.com/question/356829360/answer/907832358
 
 ***预读取数据***
 
-***预读取下一次迭代需要的数据***
+* 预读取下一次迭代需要的数据
 
 【参考】
 * 如何给你PyTorch里的Dataloader打鸡血 - MKFMIKU的文章 - 知乎 https://zhuanlan.zhihu.com/p/66145913
