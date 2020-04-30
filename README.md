@@ -51,22 +51,22 @@ https://www.zhihu.com/question/356829360/answer/907832358
 * 预读取下一次迭代需要的数据
 
 【参考】
-* 如何给你PyTorch里的Dataloader打鸡血 - MKFMIKU的文章 - 知乎 https://zhuanlan.zhihu.com/p/66145913
-* 给pytorch 读取数据加速 - 体hi的文章 - 知乎 https://zhuanlan.zhihu.com/p/72956595 
+* 如何给你PyTorch里的Dataloader打鸡血 - MKFMIKU的文章 - 知乎 <https://zhuanlan.zhihu.com/p/66145913>
+* 给pytorch 读取数据加速 - 体hi的文章 - 知乎 <https://zhuanlan.zhihu.com/p/72956595>
 
 ***借助内存***
 
 * 直接载到内存里面，或者把把内存映射成磁盘好了
 
 【参考】
-* 参见 https://zhuanlan.zhihu.com/p/66145913 的评论中 @雨宫夏一 的评论
+* 参见 <https://zhuanlan.zhihu.com/p/66145913> 的评论中 @雨宫夏一 的评论
 
 ***借助固态***
 
 * 把读取速度慢的机械硬盘换成 NVME 固态吧～
 
 【参考】
-* 如何给你PyTorch里的Dataloader打鸡血 - MKFMIKU的文章 - 知乎 https://zhuanlan.zhihu.com/p/66145913
+* 如何给你PyTorch里的Dataloader打鸡血 - MKFMIKU的文章 - 知乎 <https://zhuanlan.zhihu.com/p/66145913>
 
 ## 训练策略
 
@@ -85,7 +85,7 @@ https://www.zhihu.com/question/356829360/answer/907832358
 * Avoid unnecessary transfer of data from the GPU
 * Use pinned memory, and use `non_blocking=False` to parallelize data transfer and GPU number crunching
 * 网络设计很重要，外加不要初始化任何用不到的变量，因为 PyTorch 的初始化和 `forward` 是分开的，他不会因为你不去使用，而不去初始化
-* 合适的 `num_worker` ： Pytorch 提速指南 - 云梦的文章 - 知乎 https://zhuanlan.zhihu.com/p/39752167（这里也包含了一些其他细节上的讨论）
+* 合适的 `num_worker` ： Pytorch 提速指南 - 云梦的文章 - 知乎 <https://zhuanlan.zhihu.com/p/39752167>（这里也包含了一些其他细节上的讨论）
 
 ### 模型设计
 
@@ -110,14 +110,14 @@ https://www.zhihu.com/question/356829360/answer/907832358
 * 微软的 `NNI` 集成了多种量化感知的训练算法，并支持 `PyTorch/TensorFlow/MXNet/Caffe2` 等多个开源框架
 
 【参考】：
-* 有三AI：【杂谈】当前模型量化有哪些可用的开源工具？https://mp.weixin.qq.com/s?__biz=MzA3NDIyMjM1NA==&mid=2649037243&idx=1&sn=db2dc420c4d086fc99c7d8aada767484&chksm=8712a7c6b0652ed020872a97ea426aca1b06adf7571af3da6dac8ce991fd61001245e9bf6e9b&mpshare=1&scene=1&srcid=&sharer_sharetime=1576667804820&sharer_shareid=1d0dbdb37c6b95413d1d4fe7d61ed8f1&exportkey=A6g%2Fj50pMJYVXsedNyDVh9k%3D&pass_ticket=winxjBrzw0kHErbSri5yXS88yBx1a%2BAL9KKTG6Zt1MMS%2FeI2hpx%2BmeaLsrahnlOS#rd
+* 有三AI：【杂谈】当前模型量化有哪些可用的开源工具？<https://mp.weixin.qq.com/s?__biz=MzA3NDIyMjM1NA==&mid=2649037243&idx=1&sn=db2dc420c4d086fc99c7d8aada767484&chksm=8712a7c6b0652ed020872a97ea426aca1b06adf7571af3da6dac8ce991fd61001245e9bf6e9b&mpshare=1&scene=1&srcid=&sharer_sharetime=1576667804820&sharer_shareid=1d0dbdb37c6b95413d1d4fe7d61ed8f1&exportkey=A6g%2Fj50pMJYVXsedNyDVh9k%3D&pass_ticket=winxjBrzw0kHErbSri5yXS88yBx1a%2BAL9KKTG6Zt1MMS%2FeI2hpx%2BmeaLsrahnlOS#rd>
 
 ***网络 inference 阶段 Conv 层和 BN 层融合***
 
 【参考】
-* https://zhuanlan.zhihu.com/p/110552861
-* PyTorch本身提供了类似的功能，但是我没有使用过，希望有朋友可以提供一些使用体会：https://pytorch.org/docs/1.3.0/quantization.html#torch.quantization.fuse_modules
-* 网络inference阶段conv层和BN层的融合 - autocyz的文章 - 知乎 https://zhuanlan.zhihu.com/p/48005099
+* <https://zhuanlan.zhihu.com/p/110552861>
+* PyTorch本身提供了类似的功能，但是我没有使用过，希望有朋友可以提供一些使用体会：<https://pytorch.org/docs/1.3.0/quantization.html#torch.quantization.fuse_modules>
+* 网络inference阶段conv层和BN层的融合 - autocyz的文章 - 知乎 <https://zhuanlan.zhihu.com/p/48005099>
 
 ## 时间分析
 
@@ -125,7 +125,7 @@ https://www.zhihu.com/question/356829360/answer/907832358
 
 ## 项目推荐
 
-* 基于 Pytorch 实现模型压缩（https://github.com/666DZY666/model-compression）：
+* 基于 Pytorch 实现模型压缩（<https://github.com/666DZY666/model-compression>）：
     * 量化：8/4/2 bits(dorefa)、三值/二值(twn/bnn/xnor-net)
     * 剪枝：正常、规整、针对分组卷积结构的通道剪枝
     * 分组卷积结构
@@ -133,14 +133,14 @@ https://www.zhihu.com/question/356829360/answer/907832358
 
 ## 扩展阅读
 
-* pytorch dataloader数据加载占用了大部分时间，各位大佬都是怎么解决的？ - 知乎 https://www.zhihu.com/question/307282137 
-* 使用pytorch时，训练集数据太多达到上千万张，Dataloader加载很慢怎么办? - 知乎 https://www.zhihu.com/question/356829360 
-* PyTorch 有哪些坑/bug？ - 知乎 https://www.zhihu.com/question/67209417 
-* https://sagivtech.com/2017/09/19/optimizing-pytorch-training-code/ 
-* 26秒单GPU训练CIFAR10，Jeff Dean也点赞的深度学习优化技巧 - 机器之心的文章 - 知乎 https://zhuanlan.zhihu.com/p/79020733 
-* 线上模型加入几个新特征训练后上线，tensorflow serving预测时间为什么比原来慢20多倍？ - TzeSing的回答 - 知乎 https://www.zhihu.com/question/354086469/answer/894235805 
-* 相关资料 · 语雀 https://www.yuque.com/lart/gw5mta/bl3p3y 
-* ShuffleNetV2：https://arxiv.org/pdf/1807.11164.pdf 
-* 今天，你的模型加速了吗？这里有5个方法供你参考（附代码解析）： https://mp.weixin.qq.com/s?__biz=MzI0ODcxODk5OA==&mid=2247511633&idx=2&sn=a5ab187c03dfeab4e64c85fc562d7c0d&chksm=e99e9da8dee914be3d713c41d5dedb7fcdc9982c8b027b5e9b84e31789913c5b2dd880210ead&mpshare=1&scene=1&srcid=&sharer_sharetime=1576934236399&sharer_shareid=1d0dbdb37c6b95413d1d4fe7d61ed8f1&exportkey=A%2B3SqYGse83qyFva%2BYSy3Ng%3D&pass_ticket=winxjBrzw0kHErbSri5yXS88yBx1a%2BAL9KKTG6Zt1MMS%2FeI2hpx%2BmeaLsrahnlOS#rd 
-* pytorch常见的坑汇总 - 郁振波的文章 - 知乎 https://zhuanlan.zhihu.com/p/77952356 
-* Pytorch 提速指南 - 云梦的文章 - 知乎 https://zhuanlan.zhihu.com/p/39752167 
+* pytorch dataloader数据加载占用了大部分时间，各位大佬都是怎么解决的？ - 知乎 <https://www.zhihu.com/question/307282137>
+* 使用pytorch时，训练集数据太多达到上千万张，Dataloader加载很慢怎么办? - 知乎 <https://www.zhihu.com/question/356829360>
+* PyTorch 有哪些坑/bug？ - 知乎 <https://www.zhihu.com/question/67209417>
+* <https://sagivtech.com/2017/09/19/optimizing-pytorch-training-code/>
+* 26秒单GPU训练CIFAR10，Jeff Dean也点赞的深度学习优化技巧 - 机器之心的文章 - 知乎 <https://zhuanlan.zhihu.com/p/79020733>
+* 线上模型加入几个新特征训练后上线，tensorflow serving预测时间为什么比原来慢20多倍？ - TzeSing的回答 - 知乎 <https://www.zhihu.com/question/354086469/answer/894235805>
+* 相关资料 · 语雀 <https://www.yuque.com/lart/gw5mta/bl3p3y>
+* ShuffleNetV2：<https://arxiv.org/pdf/1807.11164.pdf>
+* 今天，你的模型加速了吗？这里有5个方法供你参考（附代码解析）： <https://mp.weixin.qq.com/s?__biz=MzI0ODcxODk5OA==&mid=2247511633&idx=2&sn=a5ab187c03dfeab4e64c85fc562d7c0d&chksm=e99e9da8dee914be3d713c41d5dedb7fcdc9982c8b027b5e9b84e31789913c5b2dd880210ead&mpshare=1&scene=1&srcid=&sharer_sharetime=1576934236399&sharer_shareid=1d0dbdb37c6b95413d1d4fe7d61ed8f1&exportkey=A%2B3SqYGse83qyFva%2BYSy3Ng%3D&pass_ticket=winxjBrzw0kHErbSri5yXS88yBx1a%2BAL9KKTG6Zt1MMS%2FeI2hpx%2BmeaLsrahnlOS#rd>
+* pytorch常见的坑汇总 - 郁振波的文章 - 知乎 <https://zhuanlan.zhihu.com/p/77952356> 
+* Pytorch 提速指南 - 云梦的文章 - 知乎 <https://zhuanlan.zhihu.com/p/39752167>
