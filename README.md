@@ -1,8 +1,8 @@
 # Some Tricks of PyTorch
 
-- [Some Tricks of PyTorch](#some-tricks-of-pytorch)
-  - [changelog](#changelog)
-  - [PyTorch提速](#pytorch提速)
+* [Some Tricks of PyTorch](#some-tricks-of-pytorch)
+  + [changelog](#changelog)
+  + [PyTorch提速](#pytorch提速)
     - [预处理提速](#预处理提速)
     - [IO提速](#io提速)
     - [训练策略](#训练策略)
@@ -12,7 +12,7 @@
     - [时间分析](#时间分析)
     - [项目推荐](#项目推荐)
     - [扩展阅读](#扩展阅读)
-  - [PyTorch节省显存](#pytorch节省显存)
+  + [PyTorch节省显存](#pytorch节省显存)
     - [尽量使用 `inplace` 操作](#尽量使用-inplace-操作)
     - [删除loss](#删除loss)
     - [混合精度](#混合精度)
@@ -20,11 +20,11 @@
     - [显存清理](#显存清理)
     - [梯度累加](#梯度累加)
     - [使用 `checkpoint` 技术](#使用-checkpoint-技术)
-      - [`torch.utils.checkpoint`](#torchutilscheckpoint)
+      - [ `torch.utils.checkpoint` ](#torchutilscheckpoint)
       - [Training Deep Nets with Sublinear Memory Cost](#training-deep-nets-with-sublinear-memory-cost)
     - [相关工具](#相关工具)
     - [参考资料](#参考资料)
-  - [其他技巧](#其他技巧)
+  + [其他技巧](#其他技巧)
     - [设置随机数种子](#设置随机数种子)
 
 ## changelog
@@ -107,9 +107,10 @@
 
 * 在训练中使用低精度( `FP16` 甚至 `INT8` 、二值网络、三值网络)表示取代原有精度( `FP32` )表示
     - `NVIDIA/Apex` :
-        + <https://blog.csdn.net/c9Yv2cf9I06K2A9E/article/details/100135729>
-        + <https://github.com/nvidia/apex>
-        + Pytorch 安装 APEX 疑难杂症解决方案 - 陈瀚可的文章 - 知乎<https://zhuanlan.zhihu.com/p/80386137>
+        - <https://blog.csdn.net/c9Yv2cf9I06K2A9E/article/details/100135729>
+        - <https://github.com/nvidia/apex>
+        - Pytorch 安装 APEX 疑难杂症解决方案 - 陈瀚可的文章 - 知乎<https://zhuanlan.zhihu.com/p/80386137>
+        - <http://kevinlt.top/2018/09/14/mixed_precision_training/>
 
 ### 代码层面
 
@@ -222,6 +223,7 @@ model.apply(inplace_relu)
     - <https://blog.csdn.net/c9Yv2cf9I06K2A9E/article/details/100135729>
     - <https://github.com/nvidia/apex>
     - Pytorch 安装 APEX 疑难杂症解决方案 - 陈瀚可的文章 - 知乎<https://zhuanlan.zhihu.com/p/80386137>
+    - <http://kevinlt.top/2018/09/14/mixed_precision_training/>
 
 ### 对不需要反向传播的操作进行管理
 
