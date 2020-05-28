@@ -228,7 +228,7 @@ model.apply(inplace_relu)
 ### 对不需要反向传播的操作进行管理
 
 * 对于不需要bp的forward, 如validation 请使用 `torch.no_grad` , 注意 `model.eval()` 不等于 `torch.no_grad()` , 请看如下讨论: ['model.eval()' vs 'with torch.no_grad()'](https://discuss.pytorch.org/t/model-eval-vs-with-torch-no-grad/19615)
-* 将不需要更新的层的参数从优化器中排除
+* ~~将不需要更新的层的参数从优化器中排除~~将变量的 `requires_grad`设为 `False`，让变量不参与梯度的后向传播（主要是为了减少不必要的梯度的显存占用）
 
 ### 显存清理
 
