@@ -1,8 +1,8 @@
 # Some Tricks of PyTorch
 
-* [Some Tricks of PyTorch](#some-tricks-of-pytorch)
-  + [changelog](#changelog)
-  + [PyTorch提速](#pytorch提速)
+- [Some Tricks of PyTorch](#some-tricks-of-pytorch)
+  - [changelog](#changelog)
+  - [PyTorch提速](#pytorch提速)
     - [预处理提速](#预处理提速)
     - [IO提速](#io提速)
     - [训练策略](#训练策略)
@@ -12,7 +12,7 @@
     - [时间分析](#时间分析)
     - [项目推荐](#项目推荐)
     - [扩展阅读](#扩展阅读)
-  + [PyTorch节省显存](#pytorch节省显存)
+  - [PyTorch节省显存](#pytorch节省显存)
     - [尽量使用 `inplace` 操作](#尽量使用-inplace-操作)
     - [删除loss](#删除loss)
     - [混合精度](#混合精度)
@@ -20,12 +20,14 @@
     - [显存清理](#显存清理)
     - [梯度累加](#梯度累加)
     - [使用 `checkpoint` 技术](#使用-checkpoint-技术)
-      - [ `torch.utils.checkpoint` ](#torchutilscheckpoint)
+      - [`torch.utils.checkpoint`](#torchutilscheckpoint)
       - [Training Deep Nets with Sublinear Memory Cost](#training-deep-nets-with-sublinear-memory-cost)
     - [相关工具](#相关工具)
     - [参考资料](#参考资料)
-  + [其他技巧](#其他技巧)
-    - [设置随机数种子](#设置随机数种子)
+  - [其他技巧](#其他技巧)
+    - [重现](#重现)
+      - [强制确定性操作](#强制确定性操作)
+      - [设置随机数种子](#设置随机数种子)
 
 ## changelog
 
@@ -63,7 +65,7 @@
 ***使用更快的图片处理***
 
 * `opencv` 一般要比 `PIL` 要快
-* 对于 `jpeg` 读取, 可以尝试 `jpeg4py` 
+* 对于 `jpeg` 读取, 可以尝试 `jpeg4py`
 * 存 `bmp` 图(降低解码时间)
 
 ***小图拼起来存放(降低读取次数)***
@@ -114,9 +116,9 @@
 
 ### 代码层面
 
-* `torch.backends.cudnn.benchmark = True` 
+* `torch.backends.cudnn.benchmark = True`
 * Do numpy-like operations on the GPU wherever you can
-* Free up memory using `del` 
+* Free up memory using `del`
 * Avoid unnecessary transfer of data from the GPU
 * Use pinned memory, and use `non_blocking=True` to parallelize data transfer and GPU number crunching
     - 文档：<https://pytorch.org/docs/stable/nn.html#torch.nn.Module.to>
@@ -163,7 +165,7 @@
 
 ### 时间分析
 
-* Python 的 `cProfile` 可以用来分析.(Python 自带了几个性能分析的模块: `profile` , `cProfile` 和 `hotshot` , 使用方法基本都差不多, 无非模块是纯 Python 还是用 C 写的)
+* Python 的 `cProfile` 可以用来分析.(Python 自带了几个性能分析的模块: `profile` ,  `cProfile` 和 `hotshot` , 使用方法基本都差不多, 无非模块是纯 Python 还是用 C 写的)
 
 ### 项目推荐
 
@@ -228,7 +230,7 @@ model.apply(inplace_relu)
 ### 对不需要反向传播的操作进行管理
 
 * 对于不需要bp的forward, 如validation 请使用 `torch.no_grad` , 注意 `model.eval()` 不等于 `torch.no_grad()` , 请看如下讨论: ['model.eval()' vs 'with torch.no_grad()'](https://discuss.pytorch.org/t/model-eval-vs-with-torch-no-grad/19615)
-* ~~将不需要更新的层的参数从优化器中排除~~将变量的 `requires_grad`设为 `False`，让变量不参与梯度的后向传播（主要是为了减少不必要的梯度的显存占用）
+* ~~将不需要更新的层的参数从优化器中排除~~将变量的 `requires_grad`设为 `False`, 让变量不参与梯度的后向传播(主要是为了减少不必要的梯度的显存占用)
 
 ### 显存清理
 
@@ -242,7 +244,7 @@ model.apply(inplace_relu)
 
 ### 使用 `checkpoint` 技术
 
-#### `torch.utils.checkpoint` 
+#### `torch.utils.checkpoint`
 
 **这是更为通用的选择.**
 
@@ -291,12 +293,12 @@ PyTorch 我实现了一版, 有兴趣的同学可以来试试: <https://github.c
 
 **PyTorch 1.7新更新功能**
 
-```python
+``` python
 >>> import torch
 >>> torch.set_deterministic(True)
 ```
 
-【参考】：<https://pytorch.org/docs/stable/notes/randomness.html#avoiding-nondeterministic-algorithms>
+【参考】:<https://pytorch.org/docs/stable/notes/randomness.html#avoiding-nondeterministic-algorithms>
 
 #### 设置随机数种子
 
