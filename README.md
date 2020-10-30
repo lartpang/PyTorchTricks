@@ -285,7 +285,20 @@ PyTorch 我实现了一版, 有兴趣的同学可以来试试: <https://github.c
 
 ## 其他技巧
 
-### 设置随机数种子
+### 重现
+
+#### 强制确定性操作
+
+**PyTorch 1.7新更新功能**
+
+```python
+>>> import torch
+>>> torch.set_deterministic(True)
+```
+
+【参考】：<https://pytorch.org/docs/stable/notes/randomness.html#avoiding-nondeterministic-algorithms>
+
+#### 设置随机数种子
 
 ``` python
 def seed_torch(seed=1029):
