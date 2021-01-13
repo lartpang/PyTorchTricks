@@ -42,6 +42,7 @@
     - 另外这里说明下, 对于之前参考的很多朋友的文章和回答, 没有把链接和对应的内容提要关联在一起, 估计会导致一些朋友阅读时相关的内容时的提问, 无法问到原作者, 这里深感抱歉.
     - 调整部分内容, 将内容尽量与参考链接相对应
 * 2020年5月18日: 补充一些关于PyTorch节省显存的技巧. 同时简单调整格式. 另外发现一个之前的错误: `non_blocking=False` 的建议应该是 `non_blocking=True` .
+* 2021年01月06日：调整下关于读取图片数据的一些介绍.
 
 ## PyTorch提速
 
@@ -62,11 +63,16 @@
 
 ### IO提速
 
+* 推荐大家关注下mmcv，其对数据的读取提供了比较高效且全面的支持：
+  - OpenMMLab：MMCV 核心组件分析(三): FileClient <https://zhuanlan.zhihu.com/p/339190576>
+
 ***使用更快的图片处理***
 
-* `opencv` 一般要比 `PIL` 要快
+* `opencv` 一般要比 `PIL` 要快 （**但是要注意，`PIL`的惰性加载的策略使得其看上去`open`要比`opencv`的`imread`要快，但是实际上那并没有完全加载数据，可以对`open`返回的对象调用其`load()`方法，从而手动加载数据，这时的速度才是合理的**）
 * 对于 `jpeg` 读取, 可以尝试 `jpeg4py`
 * 存 `bmp` 图(降低解码时间)
+* 关于不同图像处理库速度的讨论建议关注下这个：Python的各种imread函数在实现方式和读取速度上有何区别？ - 知乎 <https://www.zhihu.com/question/48762352>
+
 
 ***小图拼起来存放(降低读取次数)***
 
@@ -93,7 +99,7 @@
 
 【参考】
 
-* 参见 <https://zhuanlan.zhihu.com/p/66145913> 的评论中 @雨宫夏一 的评论
+* 参见 <https://zhuanlan.zhihu.com/p/66145913> 的评论中 @雨宫夏一 的评论（额，似乎那条评论找不到了，不过大家可以搜一搜）
 
 ***借助固态***
 
@@ -163,6 +169,11 @@
 * PyTorch本身提供了类似的功能, 但是我没有使用过, 希望有朋友可以提供一些使用体会:<https://pytorch.org/docs/1.3.0/quantization.html#torch.quantization.fuse_modules>
 * 网络inference阶段conv层和BN层的融合 - autocyz的文章 - 知乎 <https://zhuanlan.zhihu.com/p/48005099>
 
+***多分支结构融合成单分支***
+
+* ACNet、RepVGG这种设计策略也很有意思
+  - RepVGG|让你的ConVNet一卷到底，plain网络首次超过80%top1精度：<https://mp.weixin.qq.com/s/M4Kspm6hO3W8fXT_JqoEhA>
+
 ### 时间分析
 
 * Python 的 `cProfile` 可以用来分析.(Python 自带了几个性能分析的模块: `profile` ,  `cProfile` 和 `hotshot` , 使用方法基本都差不多, 无非模块是纯 Python 还是用 C 写的)
@@ -219,13 +230,15 @@ model.apply(inplace_relu)
 
 ### 混合精度
 
-使用 `Apex` 的混合精度计算. 可以节约一定的显存, 但是要小心一些不安全的操作如mean和sum:
+使用 `Apex` 的混合精度或者是PyTorch1.6开始提供的`torch.cuda.amp`模块来训练. 可以节约一定的显存, 但是要小心一些不安全的操作如mean和sum:
 
 * `NVIDIA/Apex` :
     - <https://blog.csdn.net/c9Yv2cf9I06K2A9E/article/details/100135729>
     - <https://github.com/nvidia/apex>
     - Pytorch 安装 APEX 疑难杂症解决方案 - 陈瀚可的文章 - 知乎<https://zhuanlan.zhihu.com/p/80386137>
     - <http://kevinlt.top/2018/09/14/mixed_precision_training/>
+* `torch.cuda.amp`:
+  - PyTorch的文档：<https://pytorch.org/docs/stable/notes/amp_examples.html>
 
 ### 对不需要反向传播的操作进行管理
 
@@ -240,7 +253,8 @@ model.apply(inplace_relu)
 
 ### 梯度累加
 
-把一个 `batchsize=64` 分为两个32的batch, 两次forward以后, backward一次. 但会影响 `batchnorm` 等和 `batchsize` 相关的层.
+* 把一个 `batchsize=64` 分为两个32的batch, 两次forward以后, backward一次. 但会影响 `batchnorm` 等和 `batchsize` 相关的层. 在PyTorch的文档<https://pytorch.org/docs/stable/notes/amp_examples.html#gradient-accumulation>中提到了梯度累加与混合精度并用的例子. 
+* 这篇文章提到使用梯度累加技术实现对于分布式训练的加速：<https://zhuanlan.zhihu.com/p/250471767>
 
 ### 使用 `checkpoint` 技术
 
