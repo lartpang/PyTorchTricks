@@ -114,11 +114,14 @@
 ***低精度训练***
 
 * 在训练中使用低精度( `FP16` 甚至 `INT8` 、二值网络、三值网络)表示取代原有精度( `FP32` )表示
+  - 使用 Apex 的混合精度或者是PyTorch1.6开始提供的torch.cuda.amp模块来训练. 可以节约一定的显存并提速, 但是要小心一些不安全的操作如mean和sum:
     - `NVIDIA/Apex` :
         - <https://blog.csdn.net/c9Yv2cf9I06K2A9E/article/details/100135729>
         - <https://github.com/nvidia/apex>
         - Pytorch 安装 APEX 疑难杂症解决方案 - 陈瀚可的文章 - 知乎<https://zhuanlan.zhihu.com/p/80386137>
         - <http://kevinlt.top/2018/09/14/mixed_precision_training/>
+    - `torch.cuda.amp`:
+        - <PyTorch的文档：https://pytorch.org/docs/stable/notes/amp_examples.html>
 
 ### 代码层面
 
