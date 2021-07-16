@@ -74,7 +74,6 @@
 * 存 `bmp` 图(降低解码时间)
 * 关于不同图像处理库速度的讨论建议关注下这个：Python的各种imread函数在实现方式和读取速度上有何区别？ - 知乎 <https://www.zhihu.com/question/48762352>
 
-
 ***小图拼起来存放(降低读取次数)***
 
 对于大规模的小文件读取, 建议转成单独的文件, 可以选择的格式可以考虑: `TFRecord（Tensorflow）` , `recordIO（recordIO）` , `hdf5` , `pth` , `n5` , `lmdb` 等等(<https://github.com/Lyken17/Efficient-PyTorch#data-loader>)
@@ -96,10 +95,12 @@
 
 ***借助内存***
 
-* 直接载到内存里面, 或者把把内存映射成磁盘好了
+* 直接载到内存里面
+* 把内存映射成磁盘
 
 【参考】
 
+* YoloV5的`--cache-images`的实现，实际上就是将图片读取后存到一个固定的容器对象中。
 * 参见 <https://zhuanlan.zhihu.com/p/66145913> 的评论中 @雨宫夏一 的评论（额，似乎那条评论找不到了，不过大家可以搜一搜）
 
 ***借助固态***
@@ -135,6 +136,11 @@
     - 关于 `non_blocking=True` 的设定的一些介绍：Pytorch有什么节省显存的小技巧？ - 陈瀚可的回答 - 知乎 <https://www.zhihu.com/question/274635237/answer/756144739>
 * 网络设计很重要, 外加不要初始化任何用不到的变量, 因为 PyTorch 的初始化和 `forward` 是分开的, 他不会因为你不去使用, 而不去初始化
 * 合适的 `num_worker` : Pytorch 提速指南 - 云梦的文章 - 知乎 <https://zhuanlan.zhihu.com/p/39752167>(这里也包含了一些其他细节上的讨论)
+
+### 对优化器的优化
+
+* 将模型参数存放到一块连续的内存中，从而减少`optimizer.step()`的时间
+    - <https://github.com/PhilJd/contiguous_pytorch_params>
 
 ### 模型设计
 
