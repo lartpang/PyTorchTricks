@@ -30,9 +30,9 @@
 
 ### 预处理提速
 
-- 尽量减少每次读取数据时的预处理操作, 可以考虑把一些固定的操作, 例如 `resize` , 事先处理好保存下来, 训练的时候直接拿来用
+- 尽量减少每次读取数据时的预处理操作, 可以考虑把一些固定的操作, 例如 `resize` , 事先处理好保存下来, 训练的时候直接拿来用。
 - 将预处理搬到 GPU 上加速。
-  - Linux 可以使用[`NVIDIA/DALI`](https://github.com/NVIDIA/DALI)
+  - Linux 可以使用[`NVIDIA/DALI`](https://github.com/NVIDIA/DALI)。
   - 使用基于 Tensor 的图像处理操作。
 
 ### IO 提速
@@ -79,26 +79,29 @@
 
 #### 低精度训练
 
-- 在训练中使用低精度( `FP16` 甚至 `INT8` 、二值网络、三值网络)表示取代原有精度( `FP32` )表示
-  - 使用 Apex 的混合精度或者是 PyTorch1.6 开始提供的`torch.cuda.amp`模块来训练. 可以节约一定的显存并提速, 但是要小心一些不安全的操作如 mean 和 sum:
-    - `NVIDIA/Apex` : <https://github.com/nvidia/apex>
-      - <https://blog.csdn.net/c9Yv2cf9I06K2A9E/article/details/100135729>
-      - Pytorch 安装 APEX 疑难杂症解决方案 - 陈瀚可的文章 - 知乎<https://zhuanlan.zhihu.com/p/80386137>
-      - <http://kevinlt.top/2018/09/14/mixed_precision_training/>
-    - `torch.cuda.amp`: <https://pytorch.org/docs/stable/notes/amp_examples.html>
+在训练中使用低精度( `FP16` 甚至 `INT8` 、二值网络、三值网络)表示取代原有精度( `FP32` )表示。
+
+可以节约一定的显存并提速, 但是要小心一些不安全的操作如 mean 和 sum。
+
+- 混合精度训练的介绍文章：
+  - [由浅入深的混合精度训练教程](https://mp.weixin.qq.com/s/6FCumAWa8fZ1r7xwIRC9ow)
+- [`NVIDIA/Apex`](https://github.com/nvidia/apex)提供的混合精度支持。
+  - [PyTorch 必备神器 | 唯快不破：基于 Apex 的混合精度加速](https://mp.weixin.qq.com/s/HQnI8rzPvZN6Q_5c8d1nVQ)
+  - [Pytorch 安装 APEX 疑难杂症解决方案 - 陈瀚可的文章 - 知乎](https://zhuanlan.zhihu.com/p/80386137)
+- [PyTorch1.6 开始提供的`torch.cuda.amp`](https://pytorch.org/docs/stable/notes/amp_examples.html)以支持混合精度。
 
 #### 更大的 batch
 
 更大的 batch 在固定的 epoch 的情况下往往会带来更短的训练时间。但是大的 batch 面临着超参数的设置、显存占用问题等诸多考量，这又是另一个备受关注的领域了。
 
 - 超参数设置
-  - [Accurate, large minibatch SGD: training imagenet in 1 hour](https://arxiv.org/abs/1706.02677)
-- 优化显存占用。
+  - Accurate, large minibatch SGD: training imagenet in 1 hour，[论文](https://arxiv.org/abs/1706.02677)
+- 优化显存占用
   - [Gradient Accumulation](https://pytorch.org/docs/stable/notes/amp_examples.html#gradient-accumulation)
   - [Gradient Checkpointing](https://pytorch.org/docs/1.11/checkpoint.html#torch-utils-checkpoint)
-    - Training deep nets with sublinear memory cost [PAPER](https://arxiv.org/abs/1604.06174) [CODE]()
+    - Training deep nets with sublinear memory cost，[论文](https://arxiv.org/abs/1604.06174)
   - In-Place Operation
-    - In-Place Activated BatchNorm for Memory-Optimized Training of DNNs [PAPER](https://arxiv.org/abs/1712.02616) [CODE](https://github.com/mapillary/inplace_abn)
+    - In-Place Activated BatchNorm for Memory-Optimized Training of DNNs，[论文](https://arxiv.org/abs/1712.02616)，[代码](https://github.com/mapillary/inplace_abn)
 
 ### 代码层面
 
@@ -107,10 +110,10 @@
 - Free up memory using `del`
 - Avoid unnecessary transfer of data from the GPU
 - Use pinned memory (`pin_memory=True`), and use `non_blocking=True` to parallelize data transfer and GPU number crunching
-  - 文档：<https://pytorch.org/docs/stable/nn.html#torch.nn.Module.to>
-  - 关于 `non_blocking=True` 的设定的一些介绍：Pytorch 有什么节省显存的小技巧？ - 陈瀚可的回答 - 知乎 <https://www.zhihu.com/question/274635237/answer/756144739>
-- 网络设计很重要, 外加不要初始化任何用不到的变量, 因为 PyTorch 的初始化和 `forward` 是分开的, 他不会因为你不去使用, 而不去初始化
-- 合适的 `num_worker` : Pytorch 提速指南 - 云梦的文章 - 知乎 <https://zhuanlan.zhihu.com/p/39752167>(这里也包含了一些其他细节上的讨论)
+  - 文档可见<https://pytorch.org/docs/stable/nn.html#torch.nn.Module.to>。
+  - `non_blocking=True` 的设定介绍可见[Pytorch 有什么节省显存的小技巧？ - 陈瀚可的回答 - 知乎](https://www.zhihu.com/question/274635237/answer/756144739)
+- 不要初始化任何用不到的变量，因为 PyTorch 的初始化和 `forward` 是分开的，他不会因为你不去使用，而不去初始化。
+- 合适的 `num_worker`，细节讨论可见[Pytorch 提速指南 - 云梦的文章 - 知乎](https://zhuanlan.zhihu.com/p/39752167)。
 - 使用 PyTroch JIT 将逐点运算融合（fuse）到单个 CUDA kernel 上。
   - `@torch.jit.script`
 
@@ -124,7 +127,7 @@
 
 #### CNN
 
-- [ShuffleNetV2](https://arxiv.org/pdf/1807.11164.pdf)：
+- ShuffleNetV2，[论文](https://arxiv.org/pdf/1807.11164.pdf)。
   - 卷积层输入输出通道一致: 卷积层的输入和输出特征通道数相等时 MAC（内存访问消耗时间, `memory access cost` 缩写为 `MAC` ） 最小, 此时模型速度最快
   - 减少卷积分组: 过多的 group 操作会增大 MAC, 从而使模型速度变慢
   - 减少模型分支: 模型中的分支数量越少, 模型速度越快
@@ -132,7 +135,7 @@
 
 #### Vision Transformer
 
-- [TRT-ViT: TensorRT-oriented Vision Transformer](https://arxiv.org/abs/2205.09579)。解读可见<https://www.yuque.com/lart/papers/pghqxg>。
+- TRT-ViT: TensorRT-oriented Vision Transformer，[论文](https://arxiv.org/abs/2205.09579)，[解读](https://www.yuque.com/lart/papers/pghqxg)。
   - stage-level：Transformer block 适合放置到模型的后期，这可以最大化效率和性能的权衡。
   - stage-level：先浅后深的 stage 设计模式可以提升性能。
   - block-level：Transformer 和 BottleNeck 的混合 block 要比单独的 Transformer 更有效。
@@ -206,18 +209,18 @@
 
 ### 损失函数
 
-每次循环结束时删除 loss, 可以节约很少显存, 但聊胜于无. 可见如下 issue: [Tensor to Variable and memory freeing best practices](https://discuss.pytorch.org/t/tensor-to-variable-and-memory-freeing-best-practices/6000/2)
+每次循环结束时删除 loss, 可以节约很少显存, 但聊胜于无。可见[Tensor to Variable and memory freeing best practices](https://discuss.pytorch.org/t/tensor-to-variable-and-memory-freeing-best-practices/6000/2)
 
 ### 混合精度
 
 可以节约一定的显存并提速, 但是要小心一些不安全的操作如 mean 和 sum。
 
-- 混合精度的介绍文章：
-  - [由浅入深的混合精度训练教程](https://mp.weixin.qq.com/s/6FCumAWa8fZ1r7xwIRC9ow)。
-- [`NVIDIA/Apex`](https://github.com/nvidia/apex) 的混合精度支持。
+- 混合精度训练的介绍文章：
+  - [由浅入深的混合精度训练教程](https://mp.weixin.qq.com/s/6FCumAWa8fZ1r7xwIRC9ow)
+- [`NVIDIA/Apex`](https://github.com/nvidia/apex)提供的混合精度支持。
   - [PyTorch 必备神器 | 唯快不破：基于 Apex 的混合精度加速](https://mp.weixin.qq.com/s/HQnI8rzPvZN6Q_5c8d1nVQ)
   - [Pytorch 安装 APEX 疑难杂症解决方案 - 陈瀚可的文章 - 知乎](https://zhuanlan.zhihu.com/p/80386137)
-- [PyTorch1.6 开始提供的`torch.cuda.amp`](https://pytorch.org/docs/stable/notes/amp_examples.html)
+- [PyTorch1.6 开始提供的`torch.cuda.amp`](https://pytorch.org/docs/stable/notes/amp_examples.html)以支持混合精度。
 
 ### 管理不需要反向传播的操作
 
