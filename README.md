@@ -105,17 +105,32 @@
 
 ### 代码层面
 
-- `torch.backends.cudnn.benchmark = True`
-- Do numpy-like operations on the GPU wherever you can
-- Free up memory using `del`
-- Avoid unnecessary transfer of data from the GPU
-- Use pinned memory (`pin_memory=True`), and use `non_blocking=True` to parallelize data transfer and GPU number crunching
-  - 文档可见<https://pytorch.org/docs/stable/nn.html#torch.nn.Module.to>。
-  - `non_blocking=True` 的设定介绍可见[Pytorch 有什么节省显存的小技巧？ - 陈瀚可的回答 - 知乎](https://www.zhihu.com/question/274635237/answer/756144739)
-- 不要初始化任何用不到的变量，因为 PyTorch 的初始化和 `forward` 是分开的，他不会因为你不去使用，而不去初始化。
+#### 库设置
+
+- 在训练循环之前设置`torch.backends.cudnn.benchmark = True`可以加速计算。由于计算不同内核大小卷积的 cuDNN 算法的性能不同，自动调优器可以运行一个基准来找到最佳算法。当你的输入大小不经常改变时，建议开启这个设置。如果输入大小经常改变，那么自动调优器就需要太频繁地进行基准测试，这可能会损害性能。它可以将向前和向后传播速度提高 1.27x 到 1.70x。
+- 使用页面锁定内存，即在 DataLoader 中设定[`pin_memory=True`](https://pytorch.org/docs/stable/data.html#memory-pinning)。
 - 合适的 `num_worker`，细节讨论可见[Pytorch 提速指南 - 云梦的文章 - 知乎](https://zhuanlan.zhihu.com/p/39752167)。
-- 使用 PyTroch JIT 将逐点运算融合（fuse）到单个 CUDA kernel 上。
-  - `@torch.jit.script`
+- [optimizer.zero_grad(set_to_none=False](https://pytorch.org/docs/stable/generated/torch.optim.Optimizer.zero_grad.html#torch-optim-optimizer-zero-grad)这里可以通过设置`set_to_none=True`来降低的内存占用，并且可以适度提高性能。但是这也会改变某些行为，具体可见文档。通过`model.zero_grad()`或`optimizer.zero_grad()`将对所有参数执行`memset`，并通过读写操作更新梯度。但是，将梯度设置为`None`将不会执行`memset`，并且将使用“只写”操作更新梯度。因此，设置梯度为`None`更快。
+- 反向传播期间设定使用`eval`模式并使用`torch.no_grad`关闭梯度计算。
+- 可以考虑使用[channels_last](https://pytorch.org/docs/stable/tensor_attributes.html#torch-memory-format)的内存格式。
+- [用`DistributedDataParallel`代替`DataParallel`](https://pytorch.org/docs/stable/notes/cuda.html#use-nn-parallel-distributeddataparallel-instead-of-multiprocessing-or-nn-dataparallel)。对于多 GPU 来说，即使只有单个节点，也总是优先使用 `DistributedDataParallel`而不是 `DataParallel` ，因为 `DistributedDataParallel` 应用于多进程，并为每个 GPU 创建一个进程，从而绕过 Python 全局解释器锁(GIL)并提高速度。
+
+#### 模型
+
+- 不要初始化任何用不到的变量，因为 PyTorch 的初始化和 `forward` 是分开的，他不会因为你不去使用，而不去初始化。
+- [`@torch.jit.script`](https://pytorch.org/docs/stable/generated/torch.jit.script.html#torch.jit.script)，使用 PyTroch JIT 将逐点运算融合到单个 CUDA kernel 上。
+- 在使用混合精度的 FP16 时，对于所有不同架构设计，设置尺寸为 8 的倍数。
+- BN 之前的卷积层可以去掉 bias。因为在数学上，bias 可以通过 BN 的均值减法来抵消。我们可以节省模型参数、运行时的内存。
+
+#### 数据
+
+- 将 batch size 设置为 8 的倍数，最大化 GPU 内存的使用。
+- GPU 上尽可能执行 NumPy 风格的操作。
+- 使用`del`释放内存占用。
+- 避免不同设备之间不必要的数据传输。
+- 创建张量的时候，直接指定设备，而不要创建后再传输到目标设备上。
+- 使用[`torch.from_numpy(ndarray)`](https://pytorch.org/docs/stable/generated/torch.from_numpy.html#torch-from-numpy)或者[`torch.as_tensor(data, dtype=None, device=None)`](https://pytorch.org/docs/stable/generated/torch.as_tensor.html#torch-as-tensor)，这可以通过共享内存而避免重新申请空间，具体使用细节和注意事项可参考对应文档。如果源设备和目标设备都是 CPU，`torch.from_numpy`和`torch.as_tensor`不会拷贝数据。如果源数据是 NumPy 数组，使用`torch.from_numpy`更快。如果源数据是一个具有相同数据类型和设备类型的张量，那么`torch.as_tensor`可以避免拷贝数据，这里的数据可以是 Python 的 list， tuple，或者张量。
+- 使用非阻塞传输，即设定`non_blocking=True`。这会在可能的情况下尝试异步转换，例如，将页面锁定内存中的 CPU 张量转换为 CUDA 张量。
 
 ### 对优化器的优化
 
@@ -195,6 +210,7 @@
 - [今天, 你的模型加速了吗? 这里有 5 个方法供你参考(附代码解析)](https://mp.weixin.qq.com/s/_ATSwwVqigvqmDB0Y9lOAQ)
 - [pytorch 常见的坑汇总 - 郁振波的文章 - 知乎](https://zhuanlan.zhihu.com/p/77952356)
 - [Pytorch 提速指南 - 云梦的文章 - 知乎](https://zhuanlan.zhihu.com/p/39752167)
+- [优化 PyTorch 的速度和内存效率（2022）](https://mp.weixin.qq.com/s/ShgNdizIPzeXOREoz8rgJA)
 
 ## PyTorch 节省显存
 
